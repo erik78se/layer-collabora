@@ -1,0 +1,10 @@
+options:
+  port:
+    type: int
+    default: 80
+    description: Port on which to listen
+  domain:
+    type: string
+    default: 'collabora.example.com'
+    description: 'The domain for the WOIP (E.g. collabora.example.com)
+    you can enable multiple domains by separating the domain names with | character'

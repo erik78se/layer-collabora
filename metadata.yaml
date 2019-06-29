@@ -1,0 +1,15 @@
+name: collabora
+summary: Collabora docker
+maintainer: Erik Lonroth <erik.lonroth@gmail.com>
+description: |
+  Collabora online in a docker
+tags:
+  - misc
+subordinate: false
+series:
+  - bionic
+  - disco
+  - xenial
+provides:
+  website:
+    interface: http
