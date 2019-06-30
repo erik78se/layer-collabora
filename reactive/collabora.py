@@ -2,6 +2,7 @@ from charms.reactive import when, when_all, when_not, set_flag, clear_flag, hook
 from charmhelpers.core import hookenv
 from charmhelpers.core.hookenv import ( status_set )
 from subprocess import check_call
+from requests.exceptions import ConnectionError
 import requests
 
 #
@@ -49,7 +50,7 @@ def run_container():
     hookenv.open_port(9980)
     clear_flag('collabora.stopped')
     set_flag('collabora.started')
-    hookenv.status_set('active', 'Collabora container started')
+    hookenv.status_set('waiting', 'Collabora container started.')
 
 @when('collabora.stop', 'docker.available')
 @when_not('collabora.stopped')
@@ -89,14 +90,12 @@ def statusupdate():
     
     url  = "http://127.0.0.1:{}".format(p)
     
-    response = requests.get( url ) 
-    
-    if response.ok:
-
-        status_set('active', "Collabora OK.")
-
-    else:
-
-        status_set('waiting', "Collabora not OK")
-
-        log("Nextcloud install state not OK")
+    try:
+        response = requests.get( url )
+        if response.ok:
+            status_set('active', "Collabora OK")
+        else:
+            status_set('active', "Collabora Not OK")
+    except ConnectionError as err:
+        status_set('waiting', "Waiting for collabora status")
+        log(err)
