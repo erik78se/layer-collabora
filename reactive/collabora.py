@@ -1,6 +1,6 @@
 from charms.reactive import when, when_all, when_not, set_flag, clear_flag, hook
 from charmhelpers.core import hookenv
-from charmhelpers.core.hookenv import ( status_set )
+from charmhelpers.core.hookenv import ( status_set, log )
 from subprocess import check_call
 from requests.exceptions import ConnectionError
 import requests
@@ -50,7 +50,7 @@ def run_container():
     hookenv.open_port(9980)
     clear_flag('collabora.stopped')
     set_flag('collabora.started')
-    hookenv.status_set('waiting', 'Collabora container started.')
+    hookenv.status_set('waiting', 'Collabora container starting up.')
 
 @when('collabora.stop', 'docker.available')
 @when_not('collabora.stopped')
@@ -93,7 +93,7 @@ def statusupdate():
     try:
         response = requests.get( url )
         if response.ok:
-            status_set('active', "Collabora OK")
+            status_set('active', "Collabora is OK.")
         else:
             status_set('active', "Collabora Not OK")
     except ConnectionError as err:
