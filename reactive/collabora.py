@@ -1,7 +1,8 @@
-from charms.reactive import when, when_all, when_not, set_flag, clear_flag
+from charms.reactive import when, when_all, when_not, set_flag, clear_flag, hook
 from charmhelpers.core import hookenv
+from charmhelpers.core.hookenv import ( status_set )
 from subprocess import check_call
-
+import requests
 
 #
 #
@@ -26,30 +27,25 @@ def run_container():
     Wrapper method to launch a docker container under the direction of Juju,
     and provide feedback/notifications to the end user.
     https://www.collaboraoffice.com/code/apache-reverse-proxy/
+    
+    The collabora takes some time to start. 
+    Test that it works: curl -Ivk http://<collabora:9980
     '''
 
-    run_command = [
-        'docker',
-        'run',
-        '-t',
-        '-d',
-        '-p',
-        '{}:9980:9980'.format(hookenv.unit_public_ip()),
-        '-e',
-        'domain={}'.format(hookenv.config('domain')),
-        '-e',
-        'extra_params=--o:ssl.enable=false',
-        '-e',
-        'extra_params=--o:ssl.termination=true',
-        '-e',
-        'server_name={}'.format(hookenv.config('domain')),
-        '--restart',
-        'always',
-        '--cap-add',
-        'MKNOD',
-        'collabora/code'
-    ]
-    check_call(run_command)
+    # Collabora wants dots escaped.
+    d = hookenv.config('nextcloud_domain').replace('.', '\.')
+     
+    ctxt = {'nextcloud_domain': d }
+    #TODO: use port config
+    # the domain should be that of "nextcloud" (not collabora)
+    run_command = ( "docker run -t -d "
+	"-p :9980:9980 "
+	"-e domain={nextcloud_domain} "
+	"-e extra_params=--o:ssl.enable=false "
+	"--restart always "
+	"--cap-add MKNOD collabora/code").format(**ctxt)
+    
+    check_call(run_command.split())
     hookenv.open_port(9980)
     clear_flag('collabora.stopped')
     set_flag('collabora.started')
@@ -81,3 +77,26 @@ def stop_container():
 @when('website.available')
 def configure_website(website):
     website.configure(port=hookenv.config('port'))
+
+@hook('update-status')
+def statusupdate():
+    '''
+    Check status of collabora every now and then (update-status).
+    curl -Ivk <url>
+    :return:
+    '''
+    p = hookenv.config('port')
+    
+    url  = "http://127.0.0.1:{}".format(p)
+    
+    response = requests.get( url ) 
+    
+    if response.ok:
+
+        status_set('active', "Collabora OK.")
+
+    else:
+
+        status_set('waiting', "Collabora not OK")
+
+        log("Nextcloud install state not OK")

@@ -1,10 +1,9 @@
 options:
   port:
     type: int
-    default: 80
+    default: 9980
     description: Port on which to listen
-  domain:
+  nextcloud_domain:
     type: string
-    default: 'collabora.example.com'
-    description: 'The domain for the WOIP (E.g. collabora.example.com)
-    you can enable multiple domains by separating the domain names with | character'
+    default: 'nextcloud.example.com'
+    description: 'The domain for the nexcloud server using collabora'
