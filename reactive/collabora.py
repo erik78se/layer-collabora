@@ -30,26 +30,32 @@ def run_container():
     https://www.collaboraoffice.com/code/apache-reverse-proxy/
     
     The collabora takes some time to start. 
-    Test that it works: curl -Ivk http://<collabora:9980
+    Test that it works: curl -Ivk http://<collabora>:<port>
+    -> OK
     '''
 
     # Collabora wants dots escaped.
     d = hookenv.config('nextcloud_domain').replace('.', '\.')
-     
-    ctxt = {'nextcloud_domain': d }
-    #TODO: use port config
+
+    p = hookenv.open_port(hookenv.config('port'))
+
+    ctxt = {'nextcloud_domain': d, 'port': p}
     # the domain should be that of "nextcloud" (not collabora)
     run_command = ( "docker run -t -d "
-	"-p :9980:9980 "
+	"-p :{port}:9980 "
 	"-e domain={nextcloud_domain} "
 	"-e extra_params=--o:ssl.enable=false "
 	"--restart always "
 	"--cap-add MKNOD collabora/code").format(**ctxt)
     
     check_call(run_command.split())
-    hookenv.open_port(9980)
+
+    hookenv.open_port( hookenv.config('port') )
+
     clear_flag('collabora.stopped')
+
     set_flag('collabora.started')
+
     hookenv.status_set('waiting', 'Collabora container starting up.')
 
 @when('collabora.stop', 'docker.available')
@@ -97,5 +103,5 @@ def statusupdate():
         else:
             status_set('active', "Collabora Not OK")
     except ConnectionError as err:
-        status_set('waiting', "Waiting for collabora status")
+        status_set('waiting', "Connections failed for collabora status")
         log(err)

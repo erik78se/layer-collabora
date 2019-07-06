@@ -1,27 +1,44 @@
 # Overview
 
-Collabora office for nextcloud.
+Collabora CODE charm for nextcloud.
 
-# Deploy with Nextcloud
+A typical setup is with Nextcloud and [SSL termination proxy](https://jaas.ai/ssl-termination-proxy/).
+
+<pre>
+               [router: 176.10.144.22]
+                         |
+                         |
+
+       nextcloud.lonroth.net,collabora.lonroth.net
+             [ssl-termination-proxy:443]
+              |                     |
+              |                     |
+              |                     |
+     [nextcloud.maas:80]    [collabora.maas:9980]
+</pre>
+
+# How to deploy without SSL (for tests).
+
 ```
 juju deploy postgresql
 juju deploy cs:~erik-lonroth/nextcloud
 juju config nextcloud fqdn='nextcloud.mydomain.com'
 juju relate postgresql:db nextcloud:postgres
+juju deploy collabora
 juju expose nextcloud
 ```
 
-Collabora needs to know which domain nextcloud has
+Collabora needs to know which domain nextcloud comes from.
 ```
 juju deploy cs:~erik-lonroth/collabora
 juju config collabora nextcloud_domain='nextcloud.mydomain.com'
 ```
 
-# Usage
+# How to deploy with a SSL termination proxy in front
 
-* You can then browse to http://nextcloud.mydomain.com 
-* Add the collabora app.
-* Configure the domain to point to http://collabora.mydomain.com:9980
+You can after deploy, browse to http://nextcloud.mydomain.com
+- Add the collabora app.
+- Configure the domain to point to http://collabora.mydomain.com:9980
 
 ## Known Limitations and Issues
 
@@ -37,3 +54,9 @@ Erik Lonroth <erik.lonroth@gmail.com>
 
 * https://github.com/erik78se/layer-nextcloud
 * https://github.com/erik78se/layer-collabora
+
+#TODO:
+```The optional username and password parameters
+enable the admin console feature of CODE. You can access the admin console at
+https://<CODE-domain>/loleaflet/dist/admin/admin.html.
+```

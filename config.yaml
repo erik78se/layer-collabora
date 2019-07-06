@@ -1,9 +1,9 @@
 options:
   port:
     type: int
-    default: 9980
-    description: Port on which to listen
+    default: 80
+    description: Port on which to listen.
   nextcloud_domain:
     type: string
     default: 'nextcloud.example.com'
-    description: 'The domain for the nexcloud server using collabora'
+    description: 'The domain for the nextcloud server using collabora'
