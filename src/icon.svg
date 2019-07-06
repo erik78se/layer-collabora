@@ -42,12 +42,12 @@
      showgrid="false"
      inkscape:pagecheckerboard="true"
      inkscape:zoom="4.72"
-     inkscape:cx="44.724452"
+     inkscape:cx="4.8939435"
      inkscape:cy="48.99602"
      inkscape:window-x="70"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2" />
+     inkscape:current-layer="layer1" />
   <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
   <title
      id="title2">eclispe-che</title>
@@ -64,24 +64,31 @@
          id="path20"
          d="m 0,0 2463.79,0 0,1098 L 0,1098 0,0 z" />
     </clipPath>
+    <clipPath
+       id="clipPath18-3">
+      <path
+         inkscape:connector-curvature="0"
+         id="path20-6"
+         d="M 0,0 H 2463.79 V 1098 H 0 Z" />
+    </clipPath>
   </defs>
   <g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="BACKGROUND">
     <g
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-opacity:1"
+       style="fill:#4abdff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-opacity:1"
        id="Page-1">
       <g
          id="eclispe-che"
-         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1">
+         style="fill:#4abdff;fill-opacity:1;stroke:none;stroke-opacity:1">
         <g
            id="path3023-path"
-           style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1">
+           style="fill:#4abdff;fill-opacity:1;stroke:none;stroke-opacity:1">
           <use
              xlink:href="#path-1"
              id="use9"
-             style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1"
+             style="fill:#4abdff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1"
              x="0"
              y="0"
              width="100%"
@@ -89,20 +96,15 @@
           <path
              d="M 50.000441,0.5 C 22.662621,0.5 0.5,22.661661 0.5,49.999559 0.5,77.337051 22.663098,99.5 50.000441,99.5 77.337613,99.5 99.5,77.337222 99.5,49.999559 99.5,22.661796 77.337514,0.5 50.000441,0.5 Z"
              id="path11"
-             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1"
+             style="fill:#4abdff;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1"
              inkscape:connector-curvature="0" />
         </g>
       </g>
     </g>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="PLACE LOGO HERE"
-     style="opacity:1">
     <g
+       style="opacity:1"
        id="g10"
-       transform="matrix(0.35225125,0,0,-0.35225125,5.7588832,68.992865)">
+       transform="matrix(0.35225125,0,0,-0.35225125,5.7588917,69.12673)">
       <g
          id="g12"
          transform="scale(0.1)">
@@ -110,7 +112,7 @@
            id="g14">
           <g
              id="g16"
-             clip-path="url(#clipPath18)">
+             clip-path="url(#clipPath18-3)">
             <path
                style="fill:#5549a7;fill-opacity:1;fill-rule:nonzero;stroke:none"
                id="path22"
@@ -131,4 +133,9 @@
       </g>
     </g>
   </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="PLACE LOGO HERE"
+     style="opacity:1" />
 </svg>

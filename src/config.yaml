@@ -6,12 +6,12 @@ options:
   nextcloud_domain:
     type: string
     default: 'nextcloud.example.com'
-    description: 'The domain for the nextcloud server using collabora'
-  ssl_enabled:
-    type: string
-    default: 'false'
-    description: 'The domain for the nextcloud server using collabora'
-  termination_enabled:
-    type: string
-    default: 'true'
-    description: 'The domain for the nextcloud server using collabora'
+    description: 'loolwsd.xml domain (your nextcloud server.)'
+  ssl_enable:
+    type: boolean
+    default: False
+    description: 'loolwsd.xml ssl.enabled option.'
+  ssl_termination:
+    type: boolean
+    default: True
+    description: 'loolwsd.xml ssl.termination option'
