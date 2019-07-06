@@ -34,21 +34,21 @@ def run_container():
     -> OK
     '''
 
-    # Collabora wants dots escaped.
+    # Collabora wants dots escaped in the domain name.
+    # nextcloud_domain should be that of "nextcloud"
     d = hookenv.config('nextcloud_domain').replace('.', '\.')
 
-    p = hookenv.open_port(hookenv.config('port'))
+    p = hookenv.config('port')
 
-    ctxt = {'nextcloud_domain': d, 'port': p}
-    # the domain should be that of "nextcloud" (not collabora)
-    run_command = ( "docker run -t -d "
-	"-p :{port}:9980 "
-	"-e domain={nextcloud_domain} "
-	"-e extra_params=--o:ssl.enable=false "
-	"--restart always "
-	"--cap-add MKNOD collabora/code").format(**ctxt)
+    p = hookenv.open_port(p)
+
+    run_command = [ "docker", "run", "-t", "-d",
+	"-p", ":{}:9980".format(p),
+	"-e", "domain={}".format(d),
+	"-e", '"extra_params=--o:ssl.enable=false --o:ssl.termination=true"',
+	"--restart", "always", "--cap-add", "MKNOD", "collabora/code" ]
     
-    check_call(run_command.split())
+    check_call( run_command )
 
     hookenv.open_port( hookenv.config('port') )
 

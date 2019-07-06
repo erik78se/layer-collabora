@@ -1,10 +1,8 @@
 # Overview
 
-Collabora CODE charm for nextcloud.
-
 A typical setup is with Nextcloud and [SSL termination proxy](https://jaas.ai/ssl-termination-proxy/).
 
-<pre>
+```
                [router: 176.10.144.22]
                          |
                          |
@@ -15,7 +13,8 @@ A typical setup is with Nextcloud and [SSL termination proxy](https://jaas.ai/ss
               |                     |
               |                     |
      [nextcloud.maas:80]    [collabora.maas:9980]
-</pre>
+
+```
 
 # How to deploy without SSL (for tests).
 
@@ -56,7 +55,9 @@ Erik Lonroth <erik.lonroth@gmail.com>
 * https://github.com/erik78se/layer-collabora
 
 #TODO:
-```The optional username and password parameters
-enable the admin console feature of CODE. You can access the admin console at
-https://<CODE-domain>/loleaflet/dist/admin/admin.html.
-```
+* The optional username and password parameters
+  enable the admin console feature of CODE. You can access the admin console at
+  https://<CODE-domain>/loleaflet/dist/admin/admin.html.
+
+* Make collabora bind to private address (not 0.0.0.0).
+
