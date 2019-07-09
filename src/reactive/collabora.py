@@ -1,3 +1,6 @@
+import json
+import subprocess
+
 from charms.reactive import (
     when,
     when_any,
@@ -71,13 +74,13 @@ def run_container():
 
     set_flag('collabora.started')
 
-    hookenv.status_set('waiting', 'Collabora container starting up.')
+    hookenv.status_set('waiting', 'container starting ...')
 
 
 @when('collabora.started')
 @when_not('collabora.configured')
 def write_collabora_config():
-    """Configure the docker container when collabora isn't configured"""
+    """Configure the docker container."""
 
     ctxt = {'domain': hookenv.config('nextcloud_domain'),
             'ssl_enable': str(hookenv.config('ssl_enable')).lower(),
@@ -96,6 +99,8 @@ def write_collabora_config():
     check_call(["rm", "/srv/loolwsd.xml"])
 
     set_flag('collabora.configured')
+
+    hookenv.status_set('waiting', 'configured & restarting.')
 
 
 
@@ -147,14 +152,61 @@ def statusupdate():
     curl -Ivk <url>
     :return:
     '''
-    p = hookenv.config('port')
-    url = "http://127.0.0.1:{}".format(p)
+
+    container_state = docker_inspect_state()
+
+    if not container_state:
+        status_set('waiting', "can't get container state")
+        return
+
+    status = container_state["Status"]
+
+    if container_state["Running"]:
+        # Container is running, so we check the endpoint
+        url = "http://127.0.0.1:{}".format(hookenv.config('port'))
+
+        try:
+
+            response = requests.get(url)
+
+            if response.ok:
+
+                status_set('active', "Ready")
+
+            else:
+
+                status_set('waiting', "Running, but unavailable.")
+
+        except ConnectionError as err:
+
+            status_set('waiting', "unable to get status")
+
+            log(err)
+
+    else:
+
+        status_set('waiting', "Status: {}".format(status) )
+
+def docker_inspect_state():
+    """get the state from a 'docker inspect'
+    Extract attributes:
+    "Status"     "Running"     "Paused"    "Restarting"
+    "OOMKilled"    "Dead"    "Pid"    "ExitCode"
+    "Error"    "StartedAt"    "FinishedAt"
+
+    :return json"""
+
+    cmd_line = "/usr/bin/docker inspect {}".format(hookenv.application_name())
+
     try:
-        response = requests.get(url)
-        if response.ok:
-            status_set('active', "Collabora is OK.")
-        else:
-            status_set('active', "Collabora Not OK")
-    except ConnectionError as err:
-        status_set('waiting', "Connections failed for collabora status")
-        log(err)
+
+        json_output = json.loads(subprocess.check_output([cmd_line],
+                                                         shell=True).decode('UTF-8'))
+
+        return json_output[0]["State"]
+
+    except:
+
+        log("Failed running 'docker inspect {}'".format(hookenv.application_name()))
+
+        return None
