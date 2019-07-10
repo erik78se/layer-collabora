@@ -1,50 +1,60 @@
 # Overview
 
-A typical setup is with Nextcloud and [SSL termination proxy](https://jaas.ai/ssl-termination-proxy/).
+This collabora charm is intended to be used with [nextcloud](https://jujucharms.com/new/u/erik-lonroth/nextcloud/0)
+with a ssl-termination-proxy in front to bring some security to the installation.
+
+A typical setup is with Nextcloud, Collabora & [SSL termination proxy](https://jaas.ai/ssl-termination-proxy/) looks like this.
 
 ```
-               [router: 176.10.144.22]
-                         |
-                         |
-
-       nextcloud.lonroth.net,collabora.lonroth.net
-             [ssl-termination-proxy:443]
+                [router: 176.10.144.22]
+                          |
+                          |
+               [ssl-termination-proxy:443]
+       nextcloud.mydomain.com,collabora.mydomain.com      
               |                     |
               |                     |
               |                     |
-     [nextcloud.maas:80]    [collabora.maas:9980]
+     [nextcloud.localdomain:80]    [collabora.localdomain:80]
 
 ```
 
 # How to deploy without SSL (for tests).
-
+If you like to try it out without SSL for testing purposes...
 ```
-juju deploy postgresql
 juju deploy cs:~erik-lonroth/nextcloud
 juju config nextcloud fqdn='nextcloud.mydomain.com'
+
+juju deploy postgresql
 juju relate postgresql:db nextcloud:postgres
-juju deploy collabora
+
+juju deploy cs:~erik-lonroth/collabora
+juju config collabora nextcloud_domain='nextcloud.mydomain.com'
 juju expose nextcloud
 ```
 
-Collabora needs to know which domain nextcloud comes from.
+# Login to nextcloud
+Login is avaiable at https://nextcloud.mydomain.com with 
 ```
-juju deploy cs:~erik-lonroth/collabora
-juju config collabora nextcloud_domain='nextcloud.mydomain.com'
+username: admin
+password: mypassword 
 ```
+You should change the password for admin.
 
-# How to deploy with a SSL termination proxy in front
+# Adding & configure the collabora plugin for online editing
+After installation, you should be logging in to nextcloud and add the "Collabora Plugin".
+ 
+Configure the Collabora URL and port as: "https://collabora.mydomain.com:443/"
 
-You can after deploy, browse to http://nextcloud.mydomain.com
-- Add the collabora app.
-- Configure the domain to point to http://collabora.mydomain.com:9980
+<img src="https://raw.githubusercontent.com/erik78se/layer-collabora/master/collabora-settings.png">
+
+
+After configuring collabora, try create a "ods" document from your browser and it should work. (Its known to fail the first time for some reason, 
+but try a few times if it fails.)
 
 ## Known Limitations and Issues
 
 Does not use SSL. Should have a SSL-termination proxy in front.
 
-# Configuration
-You must set the 'nextcloud_domain' to the nextcloud server.
 
 # Contact Information
 Erik Lonroth <erik.lonroth@gmail.com>
